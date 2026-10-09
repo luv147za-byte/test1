@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiveM Advanced Trainer Control Panel</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+        darkMode: 'class',
+        theme: {
+        extend: {
+        colors: {
+        cyber: {
+        900: '#0a0b10',
+        800: '#121420',
+        700: '#1a1d2e',
+        600: '#252a42',
+        accent: '#00ffcc',
+        purple: '#b026ff',
+        pink: '#ff007f'
+        }
+        }
+        }
+        }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@500;600;700&display=swap');
+
+:root{
+  --bg:#070a12;
+  --panel:rgba(17,22,36,.72);
+  --panel2:rgba(12,17,29,.82);
+  --line:rgba(110,240,255,.16);
+  --cyan:#63f6e7;
+  --blue:#63c9ff;
+  --violet:#b99cff;
+  --text:#eef8ff;
+  --muted:#8ea4b7;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif!important;
+  color:var(--text)!important;
+  background:
+    radial-gradient(700px 420px at 12% 8%,rgba(76,244,226,.12),transparent 65%),
+    radial-gradient(650px 420px at 88% 12%,rgba(139,107,255,.13),transparent 66%),
+    radial-gradient(700px 500px at 50% 105%,rgba(58,170,255,.08),transparent 68%),
+    linear-gradient(135deg,#060810,#090d18 48%,#070914)!important;
+  position:relative;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;z-index:-2;
+  background:
+    linear-gradient(rgba(99,246,231,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(99,246,231,.045) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,black,transparent 88%);
+  animation:gridDrift 24s linear infinite;
+}
+body::after{
+  content:"";
+  position:fixed;width:520px;height:520px;left:-230px;top:20%;
+  border-radius:50%;pointer-events:none;z-index:-1;
+  background:rgba(79,246,226,.055);
+  filter:blur(110px);
+  animation:orb 11s ease-in-out infinite;
+}
+@keyframes gridDrift{to{transform:translateY(42px)}}
+@keyframes orb{50%{transform:translate(120px,50px) scale(1.08)}}
+
+header,.glow-box{
+  background:linear-gradient(135deg,rgba(21,28,45,.78),rgba(9,13,24,.72))!important;
+  border:1px solid var(--line)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 24px 70px rgba(0,0,0,.30),
+    0 0 45px rgba(76,235,226,.045)!important;
+  backdrop-filter:blur(20px) saturate(130%);
+  -webkit-backdrop-filter:blur(20px) saturate(130%);
+}
+
+header{
+  border-radius:26px!important;
+  padding-top:22px!important;
+  padding-bottom:22px!important;
+  position:relative;
+  overflow:hidden;
+}
+header::after,.glow-box::after{
+  content:"";position:absolute;left:8%;right:8%;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--violet),transparent);
+  opacity:.55;
+}
+.glow-box{border-radius:26px!important;position:relative;overflow:hidden}
+
+.glow-text{
+  font-family:'Orbitron',sans-serif!important;
+  letter-spacing:.08em;
+  text-shadow:0 0 12px rgba(99,246,231,.38),0 0 30px rgba(185,156,255,.14)!important;
+  animation:titleGlow 4s ease-in-out infinite;
+}
+@keyframes titleGlow{50%{filter:brightness(1.12)}}
+
+main>div>div:first-child{
+  border-color:rgba(130,160,180,.13)!important;
+}
+main>div>div:first-child::after{
+  width:240px!important;height:1px!important;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),transparent)!important;
+  box-shadow:0 0 16px rgba(99,246,231,.35)!important;
+}
+
+.grid{perspective:900px}
+.grid>div{
+  background:linear-gradient(145deg,rgba(28,37,58,.62),rgba(9,14,25,.70))!important;
+  border:1px solid rgba(150,180,200,.12)!important;
+  border-radius:20px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 14px 34px rgba(0,0,0,.24)!important;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s!important;
+}
+.grid>div::before{
+  height:1px!important;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--violet),transparent)!important;
+  opacity:.32!important;
+}
+.grid>div::after{
+  width:150px!important;height:150px!important;
+  background:rgba(99,246,231,.055)!important;
+  filter:blur(36px)!important;
+}
+.grid>div:hover{
+  transform:translateY(-6px) scale(1.008)!important;
+  border-color:rgba(99,246,231,.27)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 20px 45px rgba(0,0,0,.30),0 0 32px rgba(99,246,231,.07)!important;
+}
+
+label{letter-spacing:.01em}
+input[type="text"]{
+  color:var(--cyan)!important;
+  background:rgba(3,7,14,.58)!important;
+  border:1px solid rgba(140,170,190,.17)!important;
+  border-radius:12px!important;
+  box-shadow:inset 0 0 14px rgba(0,0,0,.25)!important;
+  transition:.25s ease!important;
+}
+input[type="text"]:hover{border-color:rgba(99,246,231,.30)!important}
+input[type="text"]:focus{
+  outline:none!important;
+  border-color:rgba(99,246,231,.70)!important;
+  box-shadow:0 0 0 3px rgba(99,246,231,.06),0 0 22px rgba(99,246,231,.13),inset 0 0 14px rgba(99,246,231,.035)!important;
+}
+
+input[type="range"]{
+  height:6px!important;
+  border-radius:999px!important;
+  appearance:none!important;
+  background:linear-gradient(90deg,var(--cyan),var(--blue) 55%,var(--violet))!important;
+  box-shadow:inset 0 0 7px rgba(0,0,0,.55),0 0 12px rgba(99,246,231,.08)!important;
+}
+input[type="range"]::-webkit-slider-thumb{
+  appearance:none;width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--cyan) 45%,#38b9bd);
+  border:2px solid rgba(255,255,255,.82);
+  box-shadow:0 0 0 4px rgba(99,246,231,.08),0 0 14px rgba(99,246,231,.75);
+  cursor:pointer;transition:.18s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.18);box-shadow:0 0 0 6px rgba(99,246,231,.08),0 0 22px rgba(99,246,231,.9)}
+input[type="range"]::-moz-range-thumb{
+  width:16px;height:16px;border-radius:50%;
+  background:var(--cyan);border:2px solid rgba(255,255,255,.82);
+  box-shadow:0 0 14px rgba(99,246,231,.75);cursor:pointer;
+}
+
+button{
+  position:relative;overflow:hidden!important;
+  border-radius:12px!important;
+  transition:transform .25s ease,box-shadow .25s ease,background .25s ease!important;
+}
+button:hover{transform:translateY(-2px)}
+button::after{
+  content:"";position:absolute;top:-20%;left:-130%;width:75%;height:140%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+  transform:skewX(-22deg);transition:left .65s ease;pointer-events:none;
+}
+button:hover::after{left:155%}
+
+.bg-cyber-accent\/20{
+  background:rgba(99,246,231,.075)!important;
+}
+.bg-cyber-accent\/10{
+  background:rgba(99,246,231,.055)!important;
+}
+.text-cyber-accent{color:var(--cyan)!important}
+.border-cyber-accent{border-color:rgba(99,246,231,.48)!important}
+.bg-cyber-700\/60,.bg-cyber-700\/40{
+  background:rgba(17,25,40,.55)!important;
+}
+.bg-cyber-900{background:rgba(3,7,14,.65)!important}
+
+#serverDot,#gameDot{
+  box-shadow:0 0 12px currentColor;
+}
+#serverStatusText,#gameStatusText{letter-spacing:.03em}
+
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:rgba(4,7,13,.7)}
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(var(--cyan),var(--violet));
+  border-radius:99px;
+}
+@media(max-width:768px){
+  body{padding:12px!important}
+  header{border-radius:20px!important}
+  .glow-box{border-radius:20px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+
+</head>
+<body class="min-h-screen p-4 md:p-8 flex flex-col items-center">
+
+    <!-- Header ขยายเต็มจอ 100% พร้อม Padding รอบด้าน -->
+    <header class="w-full mb-8 flex flex-col md:flex-row justify-between items-center bg-cyber-800/80 backdrop-blur-md px-8 py-6 rounded-2xl glow-box">
+        <div class="flex items-center space-x-4 mb-4 md:mb-0">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyber-accent to-cyber-purple flex items-center justify-center text-cyber-900 font-bold text-2xl glow-btn">
+                <i class="fa-solid fa-gamepad"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-white tracking-wider glow-text">Highbet Marang</h1>
+                <p class="text-xs text-gray-400">มาแรงพ่อพวกมึง: <span id="portDisplay" class="text-cyber-accent font-semibold">PC 192.168.1.7:8080</span></p>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="flex flex-wrap items-center gap-3">
+            <div class="flex items-center space-x-2 bg-cyber-700/60 px-4 py-2 rounded-xl border border-gray-700">
+                <span id="serverDot" class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+                <span id="serverStatusText" class="text-xs font-medium text-gray-300">Server: Disconnected</span>
+            </div>
+            <div class="flex items-center space-x-2 bg-cyber-700/60 px-4 py-2 rounded-xl border border-gray-700">
+                <span id="gameDot" class="w-3 h-3 rounded-full bg-red-500"></span>
+                <span id="gameStatusText" class="text-xs font-medium text-gray-300">Game: Offline</span>
+            </div>
+            <button onclick="toggleConnection()" id="connectBtn" class="bg-cyber-accent/20 border border-cyber-accent text-cyber-accent hover:bg-cyber-accent hover:text-cyber-900 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2">
+                <i class="fa-solid fa-power-off"></i>
+                <span id="connectBtnText">Connect / Toggle</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content ขยายเต็มหน้าจอ 100% พร้อมเพิ่มระยะห่าง (Gap) ระหว่างการ์ด -->
+    <main class="w-full space-y-8">
+
+        <!-- Parameters & Scanner Combined Card -->
+        <div class="bg-cyber-800/80 backdrop-blur-md p-6 md:p-10 rounded-2xl glow-box">
+            <div class="flex justify-between items-center mb-8 border-b border-gray-700 pb-5">
+                <h2 class="text-xl font-bold text-white flex items-center space-x-3">
+                    <i class="fa-solid fa-sliders text-cyber-accent"></i>
+                    <span>Ts Emperor278</span>
+                </h2>
+                <div class="flex items-center space-x-3">
+                    <button onclick="resetAllValues()" class="bg-red-500/10 border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Reset All</span>
+                    </button>
+                    <span class="text-xs text-cyber-accent bg-cyber-accent/10 px-3.5 py-2 rounded-xl">Auto-sync Active</span>
+                </div>
+            </div>
+
+            <!-- ปรับ Grid ให้เว้นระยะห่างมากขึ้น (gap-6 ถึง gap-8) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                <!-- sliderValue (Left/Right Scale) -->
+                <div class="bg-cyber-700/40 p-5 rounded-2xl border border-gray-700/60 relative group flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs font-semibold text-gray-300">หันไวปรับค่า ซ้าย/ขวา</label>
+                                <button onclick="resetSingle('sliderValue', '1.134464')" title="รีเซ็ตค่าเริ่มต้น" class="text-gray-500 hover:text-cyber-accent text-xs transition-colors">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                            <input type="text" inputmode="decimal" id="sliderValueNum" value="1.1" class="w-24 bg-cyber-900 text-cyber-accent text-right text-xs px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-cyber-accent" oninput="syncSliderInput(this.value)" onblur="formatSliderDisplay()">
+                        </div>
+                        <input type="range" id="sliderValue" min="0.1" max="5.0" step="0.001" value="1.134464025" class="w-full h-2 bg-cyber-900 rounded-lg appearance-none cursor-pointer mb-2" oninput="syncSliderDisplay(this.value)">
+                    </div>
+                </div>
+
+                <!-- slidingVal -->
+                <div class="bg-cyber-700/40 p-5 rounded-2xl border border-gray-700/60 relative group flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs font-semibold text-gray-300">ตัวไหล</label>
+                                <button onclick="resetSingle('slidingVal', '12.5')" title="รีเซ็ตค่าเริ่มต้น" class="text-gray-500 hover:text-cyber-accent text-xs transition-colors">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                            <input type="text" inputmode="decimal" id="slidingValNum" value="12.5" class="w-24 bg-cyber-900 text-cyber-accent text-right text-xs px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-cyber-accent" oninput="syncInput('slidingVal', this.value)">
+                        </div>
+                        <input type="range" id="slidingVal" min="0" max="50" step="0.5" value="12.5" class="w-full h-2 bg-cyber-900 rounded-lg appearance-none cursor-pointer mb-2" oninput="syncRange('slidingValNum', this.value)">
+                    </div>
+                </div>
+
+                <!-- punchVal -->
+                <div class="bg-cyber-700/40 p-5 rounded-2xl border border-gray-700/60 relative group flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs font-semibold text-gray-300">ค่าหมัด</label>
+                                <button onclick="resetSingle('punchVal', '0.115000')" title="รีเซ็ตค่าเริ่มต้น" class="text-gray-500 hover:text-cyber-accent text-xs transition-colors">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                            <input type="text" inputmode="decimal" id="punchValNum" value="0.115000" class="w-24 bg-cyber-900 text-cyber-accent text-right text-xs px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-cyber-accent" oninput="syncInput('punchVal', this.value)">
+                        </div>
+                        <input type="range" id="punchVal" min="0.01" max="50.0" step="0.005" value="0.1150000021" class="w-full h-2 bg-cyber-900 rounded-lg appearance-none cursor-pointer mb-2" oninput="syncRange('punchValNum', this.value)">
+                    </div>
+                </div>
+
+                <!-- customFloatVal (Pool) + Scan -->
+                <div class="bg-cyber-700/40 p-5 rounded-2xl border border-gray-700/60 relative group flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs font-semibold text-gray-300">รีตัวไวไม้ (ทะลุทุกกันโปร)</label>
+                                <button onclick="resetSingle('customFloatVal', '0.392000')" title="รีเซ็ตค่าเริ่มต้น" class="text-gray-500 hover:text-cyber-accent text-xs transition-colors">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                            <input type="text" inputmode="decimal" id="customFloatValNum" value="0.392000" class="w-24 bg-cyber-900 text-cyber-accent text-right text-xs px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-cyber-accent" oninput="syncInput('customFloatVal', this.value)">
+                        </div>
+                        <input type="range" id="customFloatVal" min="0" max="2" step="0.01" value="0.392000" class="w-full h-2 bg-cyber-900 rounded-lg appearance-none cursor-pointer mb-3" oninput="syncRange('customFloatValNum', this.value)">
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-gray-700/50">
+                        <span class="text-xs font-mono text-gray-400">Status: <span id="poolAddr" class="text-gray-500">Idle</span></span>
+                        <button onclick="triggerScan('pool', 'poolAddr')" class="bg-cyber-accent/10 border border-cyber-accent text-cyber-accent hover:bg-cyber-accent hover:text-cyber-900 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all">แสกนไม้</button>
+                    </div>
+                </div>
+
+                <!-- newCustomFloatVal (Sing) + Scan -->
+                <div class="bg-cyber-700/40 p-5 rounded-2xl border border-gray-700/60 relative group flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs font-semibold text-gray-300">ไม้คริหลัง (ทะลุทุกกันโปร)</label>
+                                <button onclick="resetSingle('newCustomFloatVal', '4.900000')" title="รีเซ็ตค่าเริ่มต้น" class="text-gray-500 hover:text-cyber-accent text-xs transition-colors">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                            <input type="text" inputmode="decimal" id="newCustomFloatValNum" value="4.900000" class="w-24 bg-cyber-900 text-cyber-accent text-right text-xs px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-cyber-accent" oninput="syncInput('newCustomFloatVal', this.value)">
+                        </div>
+                        <input type="range" id="newCustomFloatVal" min="0" max="10" step="0.1" value="4.900000095" class="w-full h-2 bg-cyber-900 rounded-lg appearance-none cursor-pointer mb-3" oninput="syncRange('newCustomFloatValNum', this.value)">
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-gray-700/50">
+                        <span class="text-xs font-mono text-gray-400">Status: <span id="singAddr" class="text-gray-500">Idle</span></span>
+                        <button onclick="triggerScan('sing', 'singAddr')" class="bg-cyber-accent/10 border border-cyber-accent text-cyber-accent hover:bg-cyber-accent hover:text-cyber-900 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all">แสกน คริ</button>
+                    </div>
+                </div>
+
+                <!-- groundSinkFloatVal (Deng) + Scan -->
+                <div class="bg-cyber-700/40 p-5 rounded-2xl border border-gray-700/60 relative group flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs font-semibold text-gray-300">เกราะแตกไหล</label>
+                                <button onclick="resetSingle('groundSinkFloatVal', '5.4')" title="รีเซ็ตค่าเริ่มต้น" class="text-gray-500 hover:text-cyber-accent text-xs transition-colors">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                            <input type="text" inputmode="decimal" id="groundSinkFloatValNum" value="5.4" class="w-24 bg-cyber-900 text-cyber-accent text-right text-xs px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-cyber-accent" oninput="syncInput('groundSinkFloatVal', this.value)">
+                        </div>
+                        <input type="range" id="groundSinkFloatVal" min="0" max="20" step="0.1" value="5.4" class="w-full h-2 bg-cyber-900 rounded-lg appearance-none cursor-pointer mb-3" oninput="syncRange('groundSinkFloatValNum', this.value)">
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-gray-700/50">
+                        <span class="text-xs font-mono text-gray-400">Status: <span id="dengAddr" class="text-gray-500">Idle</span></span>
+                        <button onclick="triggerScan('deng', 'dengAddr')" class="bg-cyber-accent/10 border border-cyber-accent text-cyber-accent hover:bg-cyber-accent hover:text-cyber-900 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all">แสกนเกระาแตก</button>
+                    </div>
+                </div>
+
+                <!-- fastPunchFloatVal + Scan -->
+                <div class="bg-cyber-700/40 p-5 rounded-2xl border border-gray-700/60 relative group flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs font-semibold text-gray-300">หมัดไว (ทะลุทุกกันโปร)</label>
+                                <button onclick="resetSingle('fastPunchFloatVal', '0.573')" title="รีเซ็ตค่าเริ่มต้น" class="text-gray-500 hover:text-cyber-accent text-xs transition-colors">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                            <input type="text" inputmode="decimal" id="fastPunchFloatValNum" value="0.573" class="w-24 bg-cyber-900 text-cyber-accent text-right text-xs px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-cyber-accent" oninput="syncInput('fastPunchFloatVal', this.value)">
+                        </div>
+                        <input type="range" id="fastPunchFloatVal" min="0.1" max="2.0" step="0.01" value="0.573" class="w-full h-2 bg-cyber-900 rounded-lg appearance-none cursor-pointer mb-3" oninput="syncRange('fastPunchFloatValNum', this.value)">
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-gray-700/50">
+                        <span class="text-xs font-mono text-gray-400">Status: <span id="fastPunchAddr" class="text-gray-500">Idle</span></span>
+                        <button onclick="triggerScan('fast_punch', 'fastPunchAddr')" class="bg-cyber-accent/10 border border-cyber-accent text-cyber-accent hover:bg-cyber-accent hover:text-cyber-900 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all">แสกนหมัดไว</button>
+                    </div>
+                </div>
+
+                <!-- mudV2FloatVal + Scan -->
+                <div class="bg-cyber-700/40 p-5 rounded-2xl border border-gray-700/60 relative group flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs font-semibold text-gray-300">หมัดพุ่ง</label>
+                                <button onclick="resetSingle('mudV2FloatVal', '1.233333')" title="รีเซ็ตค่าเริ่มต้น" class="text-gray-500 hover:text-cyber-accent text-xs transition-colors">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                            <input type="text" inputmode="decimal" id="mudV2FloatValNum" value="1.2" class="w-24 bg-cyber-900 text-cyber-accent text-right text-xs px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-cyber-accent" oninput="syncMudV2Input(this.value)" onblur="formatMudV2Display()">
+                        </div>
+                        <input type="range" id="mudV2FloatVal" min="0.1" max="5.0" step="0.05" value="1.233333111" class="w-full h-2 bg-cyber-900 rounded-lg appearance-none cursor-pointer mb-3" oninput="syncMudV2Display(this.value)">
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-gray-700/50">
+                        <span class="text-xs font-mono text-gray-400">Status: <span id="mudv2Addr" class="text-gray-500">Idle</span></span>
+                        <button onclick="triggerScan('mudv2', 'mudv2Addr')" class="bg-cyber-accent/10 border border-cyber-accent text-cyber-accent hover:bg-cyber-accent hover:text-cyber-900 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all">แสกนหมัดพุ่ง</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const API_BASE = 'http://192.168.1.7:8080';
+
+        const defaultValues = {
+        sliderValue: '1.134464',
+        slidingVal: '12.5',
+        punchVal: '0.115000',
+        customFloatVal: '0.392000',
+        newCustomFloatVal: '4.900000',
+        groundSinkFloatVal: '5.4',
+        fastPunchFloatVal: '0.573',
+        mudV2FloatVal: '1.233333'
+        };
+
+        function resetSingle(id, defaultVal) {
+        document.getElementById(id).value = defaultVal;
+        document.getElementById(id + 'Num').value = (id === 'sliderValue' || id === 'mudV2FloatVal') ? Number(defaultVal).toFixed(1) : defaultVal;
+        sendUpdate();
+        }
+
+        function resetAllValues() {
+        for (const [id, val] of Object.entries(defaultValues)) {
+        document.getElementById(id).value = val;
+        document.getElementById(id + 'Num').value = (id === 'sliderValue' || id === 'mudV2FloatVal') ? Number(val).toFixed(1) : val;
+        }
+        sendUpdate();
+        }
+
+        // พิมพ์ค่าได้อิสระ ไม่บังคับเป็น 1 ตำแหน่งระหว่างพิมพ์
+        function syncSliderInput(val) {
+        document.getElementById('sliderValue').value = val;
+        const num = parseFloat(val);
+        const range = document.getElementById('sliderValue');
+        if (!isNaN(num) && num >= parseFloat(range.min) && num <= parseFloat(range.max)) {
+            range.value = val;
+        }
+        sendUpdate();
+        }
+
+        // ตอนออกจากช่องค่อยย่อการแสดงผลเหลือ 1 ตำแหน่ง
+        function formatSliderDisplay() {
+        const input = document.getElementById('sliderValueNum');
+        const num = parseFloat(input.value);
+        if (!isNaN(num)) input.value = num.toFixed(1);
+        }
+
+        // ลาก Slider: แสดง 1 ตำแหน่ง แต่ค่าจริงยังเป็นค่าที่ Slider ส่งมา
+        function syncSliderDisplay(val) {
+        const num = parseFloat(val);
+        if (!isNaN(num)) {
+            document.getElementById('sliderValueNum').value = num.toFixed(1);
+            document.getElementById('sliderValue').value = val;
+        }
+        sendUpdate();
+        }
+
+        // พิมพ์ค่าได้อิสระสำหรับหมัดพุ่ง
+        function syncMudV2Input(val) {
+        document.getElementById('mudV2FloatVal').value = val;
+        const num = parseFloat(val);
+        const range = document.getElementById('mudV2FloatVal');
+        if (!isNaN(num) && num >= parseFloat(range.min) && num <= parseFloat(range.max)) {
+            range.value = val;
+        }
+        sendUpdate();
+        }
+
+        function formatMudV2Display() {
+        const input = document.getElementById('mudV2FloatValNum');
+        const num = parseFloat(input.value);
+        if (!isNaN(num)) input.value = num.toFixed(1);
+        }
+
+        // ลาก Slider หมัดพุ่ง: แสดง 1 ตำแหน่ง แต่ค่าจริงยังเป็นค่าที่ Slider ส่งมา
+        function syncMudV2Display(val) {
+        const num = parseFloat(val);
+        if (!isNaN(num)) {
+            document.getElementById('mudV2FloatValNum').value = num.toFixed(1);
+            document.getElementById('mudV2FloatVal').value = val;
+        }
+        sendUpdate();
+        }
+
+        function syncInput(id, val) {
+        document.getElementById(id).value = val;
+        const num = parseFloat(val);
+        if (!isNaN(num)) {
+        document.getElementById(id).value = num;
+        }
+        sendUpdate();
+        }
+
+        function syncRange(id, val) {
+        const rangeId = id.replace('Num', '');
+        document.getElementById(rangeId).value = val;
+        document.getElementById(id).value = val;
+        sendUpdate();
+        }
+
+        // Read-only mobile/PC mode: keep the UI, but do not send game-changing requests.
+        function sendUpdate() {
+            // Intentionally disabled in this read-only build.
+        }
+
+        async function fetchStatus() {
+        try {
+        const response = await fetch(`${API_BASE}/api/status`);
+        const json = await response.json();
+
+        document.getElementById('serverDot').className = "w-3 h-3 rounded-full bg-emerald-500 animate-pulse";
+        document.getElementById('serverStatusText').innerText = "Server: Connected";
+
+        const gameDot = document.getElementById('gameDot');
+        const gameStatusText = document.getElementById('gameStatusText');
+        if (json.connected) {
+        gameDot.className = "w-3 h-3 rounded-full bg-emerald-500";
+        gameStatusText.innerText = "Game: Connected (PID Active)";
+        } else if (json.gameRunning) {
+        gameDot.className = "w-3 h-3 rounded-full bg-amber-500";
+        gameStatusText.innerText = "Game: Running (Not Connected)";
+        } else {
+        gameDot.className = "w-3 h-3 rounded-full bg-red-500";
+        gameStatusText.innerText = "Game: Offline";
+        }
+        } catch (e) {
+        document.getElementById('serverDot').className = "w-3 h-3 rounded-full bg-red-500";
+        document.getElementById('serverStatusText').innerText = "Server: Disconnected";
+        document.getElementById('gameDot').className = "w-3 h-3 rounded-full bg-red-500";
+        document.getElementById('gameStatusText').innerText = "Game: Offline";
+        }
+        }
+
+        async function toggleConnection() {
+            alert('โหมดนี้แสดงสถานะอย่างเดียว ไม่ส่งคำสั่งควบคุมไปยังเกม');
+        }
+
+        async function triggerScan(type, elementId) {
+            alert('โหมดนี้ปิดการสแกนไว้ และใช้ตรวจสอบสถานะการเชื่อมต่อเท่านั้น');
+        }
+
+        setInterval(fetchStatus, 1000);
+        window.onload = fetchStatus;
+    </script>
+</body>
+</html>
